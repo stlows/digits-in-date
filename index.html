@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Different digits in a date</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <div id="app">
+    <label for="dateFrom">Date from: </label><input type="date" id="dateFrom" v-model="dateFromI">
+		<label for="dateTo">Date to: </label><input type="date" id="dateTo" v-model="dateToI">
+		<p>Date from: {{ dateToString(dateFrom) }}</p>
+		<p>Date to: {{ dateToString(dateTo) }}</p>
+		<ul>
+			<li v-for="d in dates">{{ dateToString(d) }}</li>
+		</ul>
+  </div>
+
+  <script>
+		
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        dateFromI: '1994-01-01',
+				dateToI: '2020-12-31',
+				dateToString: function(d){
+					return (d.getYear() + 1900).toString() + (d.getMonth() + 1).toString().padStart(2, "0") + d.getDate().toString().padStart(2, "0");
+				},
+				daysInMonth: function(month,year) {
+  				return new Date(year, month, 0).getDate();
+				}
+      },
+	  computed: {
+				dateFrom: function () {
+					return new Date(this.dateFromI.substr(0,4), this.dateFromI.substr(5,2) - 1, this.dateFromI.substr(8,2))
+				},
+				dateTo: function () {
+					return new Date(this.dateToI.substr(0,4), this.dateToI.substr(5,2) - 1, this.dateToI.substr(8,2))
+				},
+				dates: function() {
+					var r = [];
+					for(var y = this.dateFrom.getYear(); y <= this.dateTo.getYear(); y++){
+						for(var m = 0; m < 12; m++){
+							for(var d = 1; d <= this.daysInMonth(m + 1, y ); d++){
+								r.push(new Date(y + 1900, m, d));
+							}
+						}
+					}
+						
+					return r;
+				}
+			}
+    })
+  </script>
+</body>
+</html>
